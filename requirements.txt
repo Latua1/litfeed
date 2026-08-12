@@ -1,0 +1,4 @@
+# litfeed dependencies
+biopython>=1.81      # PubMed E-utilities (Entrez)
+PyYAML>=6.0          # config.yaml
+requests>=2.28       # full-text download (Unpaywall, PMC)

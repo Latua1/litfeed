@@ -1,0 +1,25 @@
+# Deliberately short.
+#
+# config.yaml, docs/feed.json, docs/config.json and triage.json are all MEANT to
+# be committed in your own instance: GitHub Actions needs config.yaml to rebuild
+# the feed, GitHub Pages needs the JSON files to serve the app, and triage.json
+# in the repo is how the app syncs your decisions across devices. Ignoring them
+# is what breaks the whole loop.
+#
+# The one thing that must never be committed is a token — keep NCBI_API_KEY in
+# your environment or a repo secret, and the GitHub PAT only in the browser.
+
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

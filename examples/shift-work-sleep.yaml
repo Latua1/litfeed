@@ -1,0 +1,239 @@
+# Worked example: sleep and circadian health in shift workers
+# ===========================================================
+# A complete configuration using every feature, in a field that is probably not
+# yours. Read it for the shape; replace every term.
+#
+# The structure transfers. The terms do not: a term list is only good relative
+# to a set of papers you have already judged, so a borrowed one is untested by
+# definition. See guide/search-method.md.
+
+project:
+  name: Shift work and sleep
+  description: Sleep, circadian disruption and health in shift-working populations
+  email: you@example.org
+
+search:
+  lookback_days: 540
+  field: tiab
+
+  # Field 1: the phenomena.
+  topic_terms:
+    - sleep
+    - insomnia
+    - circadian
+    - chronotype
+    - sleepiness
+    - fatigue
+    - melatonin
+    - "sleep quality"
+    - "sleep duration"
+
+  # Field 2: the population and setting. Deliberately loose — "nurse", "driver"
+  # and "worker" retrieve enormous literatures on their own, which is exactly
+  # why they are ANDed against field 1 rather than added to it.
+  #
+  # Note the spelled-out plurals. PubMed cannot expand a wildcard inside a quoted
+  # phrase, so "shift work*" would match nothing at all — litfeed refuses to run
+  # rather than let that through silently. Single words like nurse* are fine.
+  context_terms:
+    - "shift work"
+    - "shift workers"
+    - "shift working"
+    - "night shift"
+    - "night shifts"
+    - nightwork
+    - "rotating shift"
+    - "rotating shifts"
+    - "on-call"
+    - nurse*
+    - "police officer"
+    - "police officers"
+    - firefighter*
+    - "truck driver"
+    - "truck drivers"
+    - aircrew
+    - "junior doctor"
+    - "junior doctors"
+
+  # Field 3: phrases specific enough to stand alone, ORed in at the top level.
+  #
+  # These are the papers the AND above cannot reach. "Shift work sleep disorder"
+  # is a named diagnosis — a paper about it needs no context word, and often
+  # uses none. Same for the jet lag and social jetlag literature, which studies
+  # the same disruption in people who are not at work at all.
+  precise_phrases:
+    - "shift work sleep disorder"
+    - "shift work disorder"
+    - "social jetlag"
+    - "social jet lag"
+    - "circadian misalignment"
+    - "night float"
+    - "forward rotating"
+    - "sleep restriction protocol"
+
+  # Field 4: NOT, matched on TITLE only.
+  #
+  # Every term here removes something that shares this vocabulary and is never
+  # the subject: "sleep" pulls in the entire sleep apnoea and paediatric sleep
+  # literature; "fatigue" pulls in oncology and multiple sclerosis; "circadian"
+  # pulls in molecular clock biology in flies and mice.
+  #
+  # Note what is NOT here. "Depression" and "anxiety" would be tempting — they
+  # are enormous in this space — but they are also outcomes of shift work, so
+  # excluding them would cost real papers. That is the test for every line:
+  # would it remove something you would have kept?
+  exclude_title_terms:
+    - "sleep apnea"
+    - "sleep apnoea"
+    - "obstructive sleep"
+    - narcolep*
+    - "restless legs"
+    - parasomnia*
+    - "cancer-related fatigue"
+    - "chronic fatigue syndrome"
+    - "multiple sclerosis"
+    - infant*
+    - toddler*
+    - "preschool"
+    - drosophila
+    - "clock gene"
+    - "suprachiasmatic"
+    - knockout
+    - "cell line"
+    - "study protocol"
+
+  max_results: 9999
+
+# A population followed on any topic. Only a fraction of the aircrew literature
+# uses sleep vocabulary, so the main query barely sees the field — this stream
+# catches the rest, and gets its own filter chip.
+#
+# A watchlist query is raw PubMed syntax, passed through untouched. litfeed
+# cannot check it for you, so the wildcard-in-a-phrase trap is yours to avoid
+# here: write "airline pilot" OR "airline pilots", never "airline pilot*".
+watchlists:
+  - name: Aircrew
+    label: Aircrew watch
+    query: >-
+      aircrew[tiab] OR "flight crew"[tiab] OR "cabin crew"[tiab]
+      OR "airline pilot"[tiab] OR "airline pilots"[tiab]
+    max_results: 500
+
+# People, followed regardless of topic.
+#
+# Both entries below are FICTIONAL placeholders — replace them. Verify any real
+# ORCID before pasting it:
+#   curl -H "Accept: application/json" https://pub.orcid.org/v3.0/<orcid>/record
+researchers:
+  - name: A. Example
+    surname: Example
+    initials: AB
+    affiliation: University of Somewhere
+    focus: Circadian misalignment in rotating shift schedules
+    # A surname this common needs the topic AND, or the feed fills with
+    # namesakes from unrelated fields.
+    pubmed_query: 'Example AB[Author] AND (sleep OR circadian OR shift)'
+    orcid: ''
+
+  - name: B. Placeholder
+    surname: Placeholder
+    initials: C
+    affiliation: Institute of Elsewhere
+    focus: Sleep and safety outcomes in transport
+    pubmed_query: 'Placeholder C[Author]'
+    orcid: ''
+
+researcher_options:
+  max_results: 100
+  verify_via_openalex: true
+
+journals:
+  - name: Sleep
+    abbreviation: Sleep
+    query: '"Sleep"[ta] NOT "Sleep Med"[ta] NOT "Sleep Health"[ta] NOT "Sleep Breath"[ta]'
+  - name: Journal of Sleep Research
+    abbreviation: J Sleep Res
+    query: '"J Sleep Res"[ta]'
+  - name: Occupational and Environmental Medicine
+    abbreviation: Occup Environ Med
+    query: '"Occup Environ Med"[ta]'
+  - name: Chronobiology International
+    abbreviation: Chronobiol Int
+    query: '"Chronobiol Int"[ta]'
+
+journal_options:
+  lookback_days: 30
+  max_results: 100
+  apply_exclusions: true
+
+# Weights, roughly as they end up after a few rounds of tuning.
+#
+# Note the shape rather than the numbers: what you actually study scores 10-15,
+# your methods score 5-8, and study-type words are 1-4 tie-breakers. Study-type
+# words start high in everyone's first draft and get cut, because they fire on
+# everything — including everything you skip.
+scoring:
+  keywords:
+    "shift work sleep disorder": 15
+    "circadian misalignment": 14
+    "night shift": 12
+    "social jetlag": 12
+    "shift work": 10
+    chronotype: 9
+    "sleep debt": 9
+    actigraphy: 8
+    "sleep restriction": 8
+    melatonin: 7
+    polysomnography: 7
+    "light exposure": 6
+    "psychomotor vigilance": 6
+    nurse: 5
+    driver: 5
+    "occupational injury": 5
+    randomized: 4
+    "cohort": 3
+    "cross-sectional": 2
+    review: 1
+
+  bonuses:
+    has_abstract: 5
+    abstract_min_chars: 200
+    title_terms: [review, meta-analysis, consensus, guideline]
+    title_term_points: 8
+
+  max_count_per_keyword: 3
+
+tags:
+  - name: intervention
+  - name: mechanism
+  - name: epidemiology
+  - name: measurement
+  - name: policy
+  - name: teaching
+  # Past the number row, so it takes a letter. `pipeline: true` marks it as
+  # consumed by an external script, where the exact spelling matters.
+  - name: for-the-review
+    hotkey: r
+    pipeline: true
+
+queue_options:
+  - key: depth
+    label: Reading depth
+    values:
+      - {value: skim, label: Skim}
+      - {value: full, label: Full read}
+      - {value: extract, label: Extract data}
+
+github:
+  owner: ''
+  repo: ''
+  path: triage.json
+  branch: ''
+
+library:
+  pdf_dir: ''
+  manifest: ''
+  unobtainable_file: ''
+  filename_template: '{author} {year} {title}.pdf'
+
+knowledge_file: knowledge.md

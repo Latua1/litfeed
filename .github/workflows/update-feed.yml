@@ -1,0 +1,68 @@
+name: Update feed
+
+# Rebuilds the feed on a schedule and commits the result, so the app is current
+# every time you open it.
+#
+# DISABLED BY DEFAULT. A fork that runs this on its owner's behalf hits NCBI on
+# a schedule they never asked for, so you have to opt in:
+#
+#   1. Edit the cron line below. Pick your own minute and hour rather than
+#      leaving the default — every fork sharing one schedule means every fork
+#      hitting NCBI in the same minute.
+#   2. Delete the `if:` line from the job.
+#   3. Settings → Actions → General → Workflow permissions → Read and write.
+#   4. Optional but recommended: add NCBI_API_KEY as a repository secret
+#      (Settings → Secrets and variables → Actions). It raises NCBI's rate limit
+#      from 3 to 10 requests/second.
+#
+# You can always run it by hand from the Actions tab without any of this.
+
+on:
+  schedule:
+    # Weekly, Monday 06:00 UTC. CHANGE THIS before enabling.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+    # Remove this line to enable scheduled runs. It lets manual runs through
+    # while keeping the schedule inert.
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch journal tables of contents
+        env:
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+        # Non-fatal: no journals configured, or a bad day at NCBI, should not
+        # stop the feed itself from rebuilding.
+        continue-on-error: true
+        run: python fetch_toc.py
+
+      - name: Generate feed
+        env:
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+        run: python generate_feed.py
+
+      # docs/library.json is deliberately NOT rebuilt here: it is derived from
+      # your local full-text collection, which CI cannot see. Rebuilding it
+      # would wipe the badges. Run build_library_index.py locally instead.
+      - name: Commit updated feed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/feed.json docs/toc.json docs/config.json
+          git diff --cached --quiet || git commit -m "Update feed $(date -u +%Y-%m-%d)"
+          git push

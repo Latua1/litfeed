@@ -1,0 +1,223 @@
+# litfeed configuration
+# =====================
+# Copy to config.yaml and edit, or run `python setup_wizard.py` to generate one.
+# This file is the whole configuration surface: nothing about your subject is
+# hardcoded anywhere in the code.
+#
+# The values below are a deliberately generic starting point. They will return
+# something, and that something will be wrong for you — which is the point. Run
+# it, look at what comes back, and edit. guide/search-method.md is about how to
+# do that edit well.
+
+project:
+  name: My literature feed          # shown in the app header and browser tab
+  description: What this feed is for
+  # Required. NCBI, Unpaywall and OpenAlex all want a contact address, and they
+  # use it to reach you before they rate-limit you. Not optional, not decorative.
+  email: you@example.org
+
+# Set NCBI_API_KEY in your environment (never in this file) to raise NCBI's rate
+# limit from 3 to 10 requests/second. Worth it once your feed gets large.
+
+search:
+  # How far back to look, in days. Counted from when PubMed first indexed the
+  # record, not the publication date — you want "new to me", not "printed
+  # recently", and journals backfill old issues constantly.
+  lookback_days: 365
+
+  # PubMed field applied to the terms below.
+  #   tiab  title + abstract  (recommended)
+  #   ti    title only        (much narrower)
+  #   all   everything        (usually far too noisy)
+  field: tiab
+
+  # THE MAIN QUERY: (topic_terms) AND (context_terms)
+  #
+  # topic_terms are what you study. context_terms narrow it to your setting,
+  # population, or method. Both fields are ORed internally, then ANDed together.
+  #
+  # A single-word term ending in * is a wildcard: asthma* matches asthmatic,
+  # asthmatics. Multi-word terms are matched as exact phrases and CANNOT contain
+  # a wildcard — PubMed does not expand one inside quotes.
+  topic_terms:
+    - asthma*
+    - wheeze
+    - bronchoconstriction
+
+  context_terms:
+    - athlete*
+    - exercise
+    - training
+
+  # ORed in at the TOP level, alongside the AND above. For phrases specific
+  # enough to retrieve on with no context word attached.
+  #
+  # This field exists because context_terms are usually loose. Adding a term to
+  # topic_terms ANDs it against every loose context word and drags in noise; the
+  # same term as an exact phrase here returns the actual literature. It is also
+  # the only way to catch papers that never mention your context at all — often
+  # a large and completely invisible share of what you care about.
+  #
+  # Start empty. Add phrases when you notice the query missing things.
+  precise_phrases: []
+
+  # A third NOT field, matched on TITLE ONLY. Subjects that share your
+  # vocabulary but that you never cover.
+  #
+  # Title-only is a deliberate choice, not a limitation: matching the same terms
+  # in abstracts costs far more real papers, because articles routinely name
+  # adjacent topics in their background and exclusion criteria without being
+  # about them.
+  #
+  # Start empty. Add terms from what you actually find yourself skipping, and
+  # check each one against papers you have already kept before you trust it.
+  exclude_title_terms: []
+
+  # Cap on records per run. The default is effectively no cap.
+  max_results: 9999
+
+  # Escape hatch: a complete PubMed query string, used verbatim. When set, every
+  # term list above is ignored (exclusions still apply). Use this if you already
+  # built and tested a query in PubMed's own interface.
+  # raw_query: '("asthma"[tiab] AND "athlete"[tiab]) OR "exercise-induced bronchoconstriction"[tiab]'
+
+# Extra streams that follow a subject on ANY topic, rather than your topic.
+#
+# Worth adding when a population you care about is rarely described in your
+# topic vocabulary, so the main query never retrieves it. Each gets its own
+# filter chip in the app.
+watchlists: []
+#   - name: Swimmers
+#     label: Swimming watch          # the source label stamped on each article
+#     query: 'swimmer*[tiab] OR "competitive swimming"[tiab]'
+#     max_results: 999
+
+# People whose work you want to see regardless of topic.
+#
+# Searched by NAME, not ORCID: PubMed only carries an ORCID when the publisher
+# passed one through, and coverage is thin enough that searching by it loses
+# most of a person's output. The ORCID below is used to CHECK the results,
+# separating a tracked researcher from their namesakes — see
+# litfeed/researchers.py for exactly when a paper gets flagged.
+#
+# Verify an ORCID before you paste it. Registries contain multiple people with
+# the same name:
+#   curl -H "Accept: application/json" https://pub.orcid.org/v3.0/<orcid>/record
+researchers: []
+#   - name: Jane Smith
+#     surname: Smith                 # for the namesake check
+#     initials: JW                   # for the namesake check
+#     affiliation: University of Somewhere
+#     focus: What they work on
+#     pubmed_query: 'Smith JW[Author]'
+#     orcid: 0000-0000-0000-0000
+
+researcher_options:
+  max_results: 100
+  # Check authorship against OpenAlex. Costs one API round trip per researcher
+  # and is what keeps the researcher tag trustworthy.
+  verify_via_openalex: true
+
+# Journals whose recent tables of contents you want to browse.
+#
+# Use the NLM title abbreviation in a [ta] search. Watch for sibling journals
+# sharing a title prefix — "Respir Med"[ta] also matches Respir Med Case Rep,
+# Respir Med Res and Respir Med X, so exclude them explicitly.
+journals: []
+#   - name: British Journal of Sports Medicine
+#     abbreviation: Br J Sports Med
+#     query: '"Br J Sports Med"[ta]'
+#   - name: Respiratory Medicine
+#     abbreviation: Respir Med
+#     query: '"Respir Med"[ta] NOT "Respir Med Case Rep"[ta] NOT "Respir Med Res"[ta]'
+
+journal_options:
+  lookback_days: 30
+  max_results: 100
+  # Apply exclude_title_terms to TOC fetches too. Without this, a large general
+  # journal's TOC is dominated by the subjects you already said you never cover.
+  apply_exclusions: true
+
+# Relevance scoring: a transparent keyword heuristic, 0-100.
+#
+# Every point is traceable to a term here, and the app shows the breakdown next
+# to each abstract. That is the design goal — a score you can argue with beats a
+# better score you cannot inspect.
+#
+# Tune against your own decisions, not your intuition. Terms that feel central
+# ("review", "treatment", "prevalence") frequently fire more often on papers you
+# skip than on papers you keep, and at a high weight they actively promote the
+# wrong material.
+scoring:
+  keywords:
+    # High: specific to exactly what you want
+    exercise-induced bronchoconstriction: 15
+    athlete: 10
+    # Medium: your methods and measures
+    spirometry: 6
+    randomized: 4
+    # Low: weak tie-breakers only
+    review: 1
+
+  bonuses:
+    has_abstract: 5              # points for having a substantial abstract
+    abstract_min_chars: 200
+    title_terms: [review, meta-analysis, consensus, guideline]
+    title_term_points: 8
+
+  # How many times a single keyword may score. Stops one term repeated through
+  # an abstract from outweighing three different terms that each matched once.
+  max_count_per_keyword: 3
+
+# Triage tags. The first nine get number-key shortcuts automatically.
+#
+#   hotkey:   a letter shortcut, for tags past the number row.
+#             j k d p x n u are reserved by the app.
+#   pipeline: mark tags an external script consumes, so the app shows that the
+#             exact spelling matters. See guide/triage.md.
+tags:
+  - name: read-later
+  - name: methods
+  - name: key-paper
+  - name: teaching
+  # - name: for-the-review
+  #   hotkey: r
+  #   pipeline: true
+
+# Optional per-article dropdowns, recorded in triage.json for downstream tools.
+# They exist so a decision you make while reading ("how deep", "which section")
+# survives to whatever you do next, without a second pass over the papers.
+queue_options: []
+#   - key: depth
+#     label: Reading depth
+#     values:
+#       - {value: skim, label: Skim}
+#       - {value: deep, label: Deep read}
+
+# Where triage decisions are synced. This is also how the app works across
+# devices. Leave blank to decide later — the app's Settings pane can set it, and
+# decisions stay in the browser (with an Export button) until you do.
+github:
+  owner: ''
+  repo: ''
+  path: triage.json
+  branch: ''
+
+# Your local full-text collection. All optional.
+library:
+  # Where fetch_pdfs.py saves files.
+  pdf_dir: ''
+  # A JSON index of what you already hold, so the app can badge those articles
+  # and fetch_pdfs.py never downloads a paper twice. Either a list of entries or
+  # an object keyed by anything; each entry needs at least a "doi", plus
+  # optionally "filename" and "has_full_text".
+  manifest: ''
+  # A plain text or markdown file listing papers you have given up on. Any
+  # doi.org or pubmed.ncbi.nlm.nih.gov URL in it is picked up, so it can be
+  # ordinary prose with links.
+  unobtainable_file: ''
+  # Placeholders: {author} {year} {title} {pmid} {doi}
+  filename_template: '{author} {year} {title}.pdf'
+
+# Markdown file shown in the app's Notes tab. Must live in docs/.
+knowledge_file: knowledge.md

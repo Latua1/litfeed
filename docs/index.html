@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <title>litfeed</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f172a' width='100' height='100' rx='20'/><text x='50' y='68' text-anchor='middle' font-size='52'>📑</text></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header id="header">
+            <div class="header-left">
+                <h1 id="app-title">litfeed</h1>
+                <span id="sync-dot" class="sync-dot"></span>
+            </div>
+            <div class="header-actions">
+                <button id="btn-filter" class="icon-btn" aria-label="Filter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
+                    <span id="filter-badge" class="badge hidden">0</span>
+                </button>
+                <button id="btn-sync" class="icon-btn" aria-label="Sync to GitHub">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                    </svg>
+                </button>
+                <button id="btn-refresh" class="icon-btn" aria-label="Refresh">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                </button>
+                <button id="btn-settings" class="icon-btn" aria-label="Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <div id="search-bar">
+            <input type="search" id="search-input" placeholder="Search title, authors, abstract, notes, tags..." autocomplete="off">
+        </div>
+
+        <!-- Quick filters. Watchlist chips are appended from config.json. -->
+        <div id="quick-filters">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="unread">Review</button>
+            <button class="chip" data-filter="committed">Kept</button>
+            <button class="chip" data-filter="researcher">Researchers</button>
+            <button class="chip" data-filter="toc">TOC</button>
+            <button class="chip" data-filter="pipeline">Board</button>
+        </div>
+
+        <!-- Content area (grid on desktop, 3-col on ultrawide) -->
+        <div id="content-area">
+            <!-- Feed list -->
+            <main id="feed-list"></main>
+
+            <!-- Article detail panel -->
+            <div id="detail-view" class="hidden">
+                <div class="detail-header">
+                    <button id="btn-back" class="icon-btn" aria-label="Back">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <span class="detail-title-short"></span>
+                    <div style="width:36px"></div>
+                </div>
+                <div class="detail-body">
+                    <div id="detail-score" class="score-badge"></div>
+                    <h2 id="detail-title"></h2>
+                    <p id="detail-authors" class="meta"></p>
+                    <p id="detail-journal" class="meta"></p>
+                    <div id="detail-researcher-badge" class="researcher-badge hidden"></div>
+                    <div id="detail-library-badge" class="library-badge hidden"></div>
+
+                    <!-- Mobile-only triage actions -->
+                    <div id="mobile-triage" class="mobile-only">
+                        <div id="mobile-tags" class="sidebar-tags-area"></div>
+                        <div class="mobile-triage-row">
+                            <button id="mobile-priority" class="priority-btn priority-normal">Normal</button>
+                            <button id="mobile-exclude" class="toggle-btn" title="Exclude from queue (x)">🔇</button>
+                        </div>
+                        <div id="mobile-queue-options"></div>
+                        <textarea id="detail-notes" placeholder="Notes (n to focus)..." rows="3"></textarea>
+                        <div class="mobile-commit-row">
+                            <button id="mobile-commit" class="commit-btn">Keep (Enter)</button>
+                            <button id="mobile-skip" class="skip-btn">Skip</button>
+                            <button id="mobile-undo" class="undo-btn">↶ Undo</button>
+                        </div>
+                    </div>
+
+                    <!-- Triage workspace (desktop: inside the detail column) -->
+                    <div id="detail-triage" class="desktop-only">
+                        <div class="triage-row">
+                            <div class="triage-section">
+                                <h4>Tags <span class="shortcut-hint" id="tag-hint">1-9</span></h4>
+                                <div id="detail-tags" class="sidebar-tags-area"></div>
+                            </div>
+                            <div class="triage-section triage-controls">
+                                <h4>Priority <span class="shortcut-hint">p</span></h4>
+                                <button id="detail-priority" class="priority-btn priority-normal">Normal</button>
+                                <button id="detail-exclude" class="toggle-btn" title="Exclude from queue (x)">🔇 Exclude</button>
+                            </div>
+                        </div>
+                        <div id="detail-queue-options" class="triage-row"></div>
+                        <div class="triage-section">
+                            <h4>Notes <span class="shortcut-hint">n</span></h4>
+                            <textarea id="detail-notes-desktop" placeholder="Add your notes..." rows="3"></textarea>
+                        </div>
+                        <div class="triage-commit-row">
+                            <button id="detail-commit" class="commit-btn">Keep (Enter)</button>
+                            <button id="detail-skip" class="skip-btn">Skip (d)</button>
+                            <button id="detail-undo" class="undo-btn">↶ Undo (u)</button>
+                        </div>
+                    </div>
+
+                    <!-- Abstract -->
+                    <div id="detail-abstract-section">
+                        <h3>Abstract</h3>
+                        <p id="detail-abstract"></p>
+                    </div>
+
+                    <!-- Score breakdown -->
+                    <div id="detail-breakdown-section">
+                        <h3>Score breakdown</h3>
+                        <div id="detail-score-breakdown"></div>
+                    </div>
+
+                    <!-- Related articles already kept -->
+                    <div id="detail-related-section">
+                        <h3>Related in your collection</h3>
+                        <div id="detail-related"></div>
+                    </div>
+
+                    <!-- Action links -->
+                    <div id="detail-actions">
+                        <a id="btn-pubmed" class="action-btn" target="_blank" rel="noopener">Open in PubMed</a>
+                        <button id="btn-copy-doi" class="action-btn secondary">Copy DOI</button>
+                    </div>
+                </div>
+                <!-- Navigation footer -->
+                <div id="detail-nav" class="detail-nav">
+                    <button id="btn-prev" class="nav-btn" aria-label="Previous">← Prev</button>
+                    <span id="nav-counter" class="nav-counter">0 / 0</span>
+                    <button id="btn-next" class="nav-btn" aria-label="Next">Next →</button>
+                </div>
+            </div>
+
+            <!-- Sidebar (third column on ultrawide) -->
+            <aside id="sidebar">
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" id="tab-notes" data-panel="panel-notes">Triage</button>
+                    <button class="sidebar-tab" id="tab-queue" data-panel="panel-queue">Queue</button>
+                    <button class="sidebar-tab" id="tab-kb" data-panel="panel-kb">Notes</button>
+                </div>
+
+                <!-- Triage workspace -->
+                <div id="panel-notes" class="sidebar-panel active">
+                    <div class="sidebar-section">
+                        <h4>Tags <span class="shortcut-hint" id="tag-hint-sidebar">1-9</span></h4>
+                        <div id="sidebar-tags" class="sidebar-tags-area"></div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h4>Priority <span class="shortcut-hint">p</span></h4>
+                        <button id="sidebar-priority" class="priority-btn priority-normal">Normal</button>
+                    </div>
+                    <div class="sidebar-row">
+                        <button id="sidebar-exclude" class="toggle-btn" title="Exclude from queue (x)">🔇 Exclude from queue</button>
+                    </div>
+                    <div class="sidebar-section">
+                        <a id="sidebar-pubmed" class="action-btn" target="_blank" rel="noopener">PubMed</a>
+                        <button id="sidebar-copy-doi" class="action-btn secondary" style="margin-top:6px">Copy DOI</button>
+                    </div>
+                    <div class="sidebar-commit-area">
+                        <button id="btn-commit" class="commit-btn">Keep (Enter)</button>
+                        <button id="btn-skip" class="skip-btn">Skip (d)</button>
+                        <button id="btn-undo" class="undo-btn">↶ Undo last (u)</button>
+                    </div>
+                    <div class="shortcut-legend">
+                        <p><kbd>j</kbd>/<kbd>k</kbd> navigate · <kbd>1</kbd>-<kbd>9</kbd> tags · <kbd>p</kbd> priority</p>
+                        <p><kbd>x</kbd> exclude · <kbd>n</kbd> notes</p>
+                        <p><kbd>Enter</kbd> keep · <kbd>d</kbd> skip · <kbd>u</kbd> undo · <kbd>Esc</kbd> back</p>
+                    </div>
+                </div>
+
+                <!-- Queue panel -->
+                <div id="panel-queue" class="sidebar-panel">
+                    <div id="queue-list"></div>
+                </div>
+
+                <!-- Notes / knowledge file panel -->
+                <div id="panel-kb" class="sidebar-panel">
+                    <div id="kb-content"></div>
+                </div>
+            </aside>
+
+        </div><!-- /content-area -->
+
+        <!-- Status bar -->
+        <div id="status-bar">
+            <span id="status-text">Loading...</span>
+        </div>
+
+        <!-- Filter panel -->
+        <div id="filter-panel" class="hidden">
+            <div class="panel-header">
+                <h2>Filters</h2>
+                <button id="btn-close-filter" class="icon-btn" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="filter-group">
+                    <h3>Status</h3>
+                    <div class="filter-options" id="filter-status">
+                        <button class="chip active" data-value="all">All</button>
+                        <button class="chip" data-value="unread">Review</button>
+                        <button class="chip" data-value="committed">Kept</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>Researchers</h3>
+                    <div class="filter-options" id="filter-researchers"></div>
+                </div>
+                <div class="filter-group">
+                    <h3>Min Score: <span id="min-score-value">0</span></h3>
+                    <input type="range" id="filter-min-score" min="0" max="100" value="0" step="5">
+                </div>
+                <div class="filter-group">
+                    <h3>Sort by</h3>
+                    <div class="filter-options" id="filter-sort">
+                        <button class="chip active" data-value="score">Score</button>
+                        <button class="chip" data-value="date">Date</button>
+                        <button class="chip" data-value="journal">Journal</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>Journal</h3>
+                    <select id="filter-journal">
+                        <option value="">All journals</option>
+                    </select>
+                </div>
+                <button id="btn-clear-filters" class="action-btn secondary">Clear All Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings panel -->
+    <div id="settings-panel" class="hidden">
+        <div class="panel-header">
+            <h2>Settings</h2>
+            <button id="btn-close-settings" class="icon-btn" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="panel-body">
+            <div class="filter-group">
+                <h3>Sync target</h3>
+                <p class="settings-desc">
+                    Your triage decisions are written to a JSON file in a GitHub repo you own.
+                    That file is also how the app works across devices.
+                </p>
+                <label class="settings-label">Owner (user or org)</label>
+                <input type="text" id="settings-gh-owner" placeholder="your-username"
+                       autocomplete="off" autocapitalize="off" spellcheck="false">
+                <label class="settings-label">Repository</label>
+                <input type="text" id="settings-gh-repo" placeholder="my-litfeed"
+                       autocomplete="off" autocapitalize="off" spellcheck="false">
+                <label class="settings-label">File path in the repo</label>
+                <input type="text" id="settings-gh-path" placeholder="triage.json"
+                       autocomplete="off" autocapitalize="off" spellcheck="false">
+                <p id="repo-summary" class="settings-hint"></p>
+            </div>
+
+            <div class="filter-group">
+                <h3>Access token</h3>
+                <label class="settings-label">GitHub personal access token</label>
+                <input type="password" id="settings-pat" placeholder="Paste a token to replace the saved one"
+                       autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
+                       data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other">
+                <p id="token-summary" class="settings-hint"></p>
+                <div class="settings-row">
+                    <button id="btn-test-token" class="chip">Test token</button>
+                    <button id="btn-clear-token" class="chip">Clear</button>
+                    <span id="token-status" class="settings-hint"></span>
+                </div>
+                <p class="settings-hint">Leave blank to keep the saved token. Testing a valid token saves it.</p>
+
+                <details id="token-help" class="token-help">
+                    <summary>How to create the token</summary>
+                    <ol class="token-steps">
+                        <li>Open
+                            <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">
+                                github.com/settings/personal-access-tokens/new
+                            </a>
+                        </li>
+                        <li><strong>Token name:</strong> anything you'll recognise later</li>
+                        <li><strong>Expiration:</strong> the longest you're comfortable with (1 year max)</li>
+                        <li><strong>Repository access:</strong> Only select repositories &rarr; the repo named above</li>
+                        <li><strong>Permissions:</strong> Repository permissions &rarr; <strong>Contents</strong> &rarr; <strong>Read and write</strong><br>
+                            <span class="settings-hint">That is the only permission needed. Not <code>repo</code> — that's the old classic-token scope, and it grants far more.</span></li>
+                        <li>Generate, copy the <code>github_pat_…</code> string, paste it above, press <strong>Test token</strong></li>
+                    </ol>
+                    <p class="settings-hint">
+                        <strong>Where the token lives:</strong> in this browser's localStorage, in plain text.
+                        Anyone with access to this browser profile can read it. Use a fine-grained token
+                        scoped to this one repository with Contents-only permission, so that is the whole
+                        blast radius, and revoke it on the GitHub token page if a device is lost.
+                        Clearing site data or reinstalling the app wipes it and you paste it again.
+                    </p>
+                    <p class="settings-hint">
+                        Tokens expire. When yours does, sync fails with a 401 and you make a new one —
+                        nothing is lost, your triage stays queued locally until you do.
+                    </p>
+                </details>
+            </div>
+
+            <div class="filter-group">
+                <h3>Push size</h3>
+                <p class="settings-desc">Queue decisions locally and push after this many. Use the ↑ button to flush early.</p>
+                <div id="settings-batch-size" class="filter-options">
+                    <button class="chip" data-value="1">1</button>
+                    <button class="chip" data-value="5">5</button>
+                    <button class="chip" data-value="10">10</button>
+                    <button class="chip" data-value="25">25</button>
+                </div>
+                <p id="settings-batch-status" class="settings-hint"></p>
+            </div>
+
+            <div class="filter-group">
+                <h3>Sync status</h3>
+                <p id="sync-status" class="settings-desc">Not synced yet</p>
+                <div class="settings-actions">
+                    <button id="btn-pull" class="action-btn secondary">Pull from GitHub</button>
+                    <button id="btn-export" class="action-btn secondary">Export triage.json</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
