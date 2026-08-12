@@ -150,6 +150,18 @@ AND for very common names. See [guide/search-method.md](guide/search-method.md).
 
 ---
 
+## Status
+
+**Published as-is, and not maintained.** Issues and pull requests are closed. No
+support, no roadmap, no release schedule — this is a working tool put in the
+open because it may be useful, not a project seeking contributors.
+
+That is not a warning about the code. It is tested, it runs, and it is what the
+author uses. It simply means the version you clone today is the version you have:
+**fork it and make it yours.** The MIT license exists precisely so you can, and
+`AGENTS.md` plus `config.example.yaml` are written to make that a short
+afternoon rather than an archaeology project.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

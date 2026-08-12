@@ -3,6 +3,10 @@
 Most people configure litfeed with an assistant's help. This file is the
 orientation you would otherwise have to reconstruct by reading everything.
 
+This repo is unmaintained and takes no contributions, so there is no upstream
+to keep compatibility with. If a change makes the tool fit its owner better,
+make it — this is their copy.
+
 ## The one rule
 
 **Configuration goes in `config.yaml`. Nothing else.**
