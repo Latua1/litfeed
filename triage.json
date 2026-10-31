@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:17:13.217Z",
+  "syncedAt": "2026-10-31T20:17:15.016Z",
   "committed": {
+    "42860906": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:15.016Z",
+      "title": "Caregiver Burden and Its Determinants After Subthalamic Nucleus Deep Brain Stimulation for Parkinson's Disease: A Cross-Sectional Long-Term Follow-Up Study.",
+      "authors": "Margarido I, Pacheco C, Ramos J et al.",
+      "journal": "Movement disorders clinical practice",
+      "year": "2026",
+      "doi": "10.1002/mdc3.70851",
+      "score": 5
+    },
     "42864990": {
       "tags": [],
       "priority": "normal",
