@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-31T20:18:23.603Z",
+  "syncedAt": "2026-10-31T20:18:28.083Z",
   "committed": {
     "42823526": {
       "tags": [],
@@ -27,6 +27,20 @@
       "journal": "Movement disorders : official journal of the Movement Disorder Society",
       "year": "2026",
       "doi": "10.1002/mds.70556",
+      "score": 5
+    },
+    "42844068": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:18:28.083Z",
+      "title": "Subthalamic nucleus beta oscillations and sleep disorders in Parkinson's disease: A new perspective on deep brain stimulation regulation mechanisms and circuits.",
+      "authors": "Huang H, Ruan P, Wang Y et al.",
+      "journal": "Parkinsonism & related disorders",
+      "year": "2026",
+      "doi": "10.1016/j.parkreldis.2026.109001",
       "score": 5
     },
     "42845107": {
