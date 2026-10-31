@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:16:40.055Z",
+  "syncedAt": "2026-10-31T20:16:43.100Z",
   "committed": {
+    "42886615": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:16:43.100Z",
+      "title": "Is Unilateral Focused Ultrasound Thalamotomy as Effective and Safe as Unilateral Deep Brain Stimulation for Essential Tremor? - A critical evaluation.",
+      "authors": "Blomstedt Y, Awad A, Philipson J et al.",
+      "journal": "Stereotactic and functional neurosurgery",
+      "year": "2026",
+      "doi": "10.1159/sfn/aeuag013",
+      "score": 20
+    },
     "42900661": {
       "tags": [],
       "priority": "normal",
