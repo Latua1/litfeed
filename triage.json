@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:17:57.107Z",
+  "syncedAt": "2026-10-31T20:17:59.304Z",
   "committed": {
+    "42823526": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:59.304Z",
+      "title": "Non-motor symptoms burden and motor recovery following STN-DBS in Parkinson's disease: a data-driven longitudinal analysis.",
+      "authors": "Abbas G, Peach R, Temuulen U et al.",
+      "journal": "Journal of neurology",
+      "year": "2026",
+      "doi": "10.1007/s00415-026-14160-x",
+      "score": 5
+    },
     "42834674": {
       "tags": [],
       "priority": "normal",
