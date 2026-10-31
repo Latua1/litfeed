@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:16:43.100Z",
+  "syncedAt": "2026-10-31T20:16:50.612Z",
   "committed": {
+    "42864990": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:16:50.612Z",
+      "title": "Preoperative Functional Imaging Predicts Deep Brain Stimulation Outcome in Craniocervical Dystonia.",
+      "authors": "Fan H, Boutet A, Elias GJB et al.",
+      "journal": "Movement disorders : official journal of the Movement Disorder Society",
+      "year": "2026",
+      "doi": "10.1002/mds.70552",
+      "score": 20
+    },
     "42886615": {
       "tags": [],
       "priority": "normal",
