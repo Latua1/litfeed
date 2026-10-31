@@ -1,0 +1,60 @@
+project:
+  name: DBS feed
+  description: Deep brain stimulation for neurological diseases
+  email: johannes.kahkola@fimnet.fi
+search:
+  lookback_days: 30
+  field: tiab
+  topic_terms:
+  - '"deep brain stimulation"'
+  context_terms:
+  - '"parkinson''s disease"'
+  - tremor
+  - dystonia
+  - '"movement disorde'
+  precise_phrases: []
+  exclude_title_terms: []
+watchlists: []
+researchers: []
+researcher_options:
+  max_results: 100
+  verify_via_openalex: true
+journals: []
+journal_options:
+  lookback_days: 30
+  max_results: 100
+  apply_exclusions: true
+scoring:
+  keywords:
+    '"deep brain stimulation"': 10
+    '"parkinson''s disease"': 5
+    tremor: 5
+    dystonia: 5
+    '"movement disorde': 5
+  bonuses:
+    has_abstract: 5
+    abstract_min_chars: 200
+    title_terms:
+    - review
+    - meta-analysis
+    - consensus
+    - guideline
+    title_term_points: 8
+  max_count_per_keyword: 3
+tags:
+- name: clinical
+- name: preclinical
+- name: connectomics
+- name: methodol
+queue_options: []
+github:
+  owner: ''
+  repo: ''
+  path: triage.json
+  branch: ''
+library:
+  pdf_dir: ''
+  manifest: ''
+  unobtainable_file: ''
+  filename_template: '{author} {year} {title}.pdf'
+knowledge_file: knowledge.md

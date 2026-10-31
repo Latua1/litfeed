@@ -1,0 +1,58 @@
+{
+  "appName": "DBS feed",
+  "description": "Deep brain stimulation for neurological diseases",
+  "github": {
+    "owner": "",
+    "repo": "",
+    "path": "triage.json",
+    "branch": ""
+  },
+  "tags": [
+    {
+      "name": "clinical",
+      "numberKey": 1,
+      "hotkey": "",
+      "pipeline": false
+    },
+    {
+      "name": "preclinical",
+      "numberKey": 2,
+      "hotkey": "",
+      "pipeline": false
+    },
+    {
+      "name": "connectomics",
+      "numberKey": 3,
+      "hotkey": "",
+      "pipeline": false
+    },
+    {
+      "name": "methodol",
+      "numberKey": 4,
+      "hotkey": "",
+      "pipeline": false
+    }
+  ],
+  "queueOptions": [],
+  "scoreKeywords": {
+    "\"deep brain stimulation\"": 10,
+    "\"parkinson's disease\"": 5,
+    "tremor": 5,
+    "dystonia": 5,
+    "\"movement disorde": 5
+  },
+  "scoreBonuses": {
+    "has_abstract": 5,
+    "abstract_min_chars": 200,
+    "title_terms": [
+      "review",
+      "meta-analysis",
+      "consensus",
+      "guideline"
+    ],
+    "title_term_points": 8
+  },
+  "scoreMaxCount": 3,
+  "watchlists": [],
+  "knowledgeFile": "knowledge.md"
+}
