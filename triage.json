@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-31T20:18:13.543Z",
+  "syncedAt": "2026-10-31T20:18:17.376Z",
   "committed": {
     "42823526": {
       "tags": [],
@@ -140,6 +140,20 @@
       "year": "2026",
       "doi": "10.1159/sfn/aeuag006",
       "score": 38
+    },
+    "42920097": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:18:17.376Z",
+      "title": "Remote Versus In-Person Follow-up Programming After Subthalamic Deep Brain Stimulation for Parkinson's Disease: A Multicenter Randomized Noninferiority Trial.",
+      "authors": "Shaik J, Zhang W, Zentsch V et al.",
+      "journal": "Movement disorders : official journal of the Movement Disorder Society",
+      "year": "2026",
+      "doi": "10.1002/mds.70575",
+      "score": 5
     }
   },
   "skipped": [
