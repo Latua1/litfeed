@@ -1,0 +1,20 @@
+{
+  "syncedAt": "2026-10-31T20:15:59.819Z",
+  "committed": {
+    "42900661": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:15:59.819Z",
+      "title": "The Pallidothalamic Tract in Functional Neurosurgery: A Systematic Review.",
+      "authors": "Al-Smadi MW, Al-Khafaji YQ, Aslan S et al.",
+      "journal": "Stereotactic and functional neurosurgery",
+      "year": "2026",
+      "doi": "10.1159/sfn/aeuag006",
+      "score": 38
+    }
+  },
+  "skipped": []
+}
