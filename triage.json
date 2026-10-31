@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:18:39.743Z",
+  "syncedAt": "2026-10-31T20:18:42.351Z",
   "committed": {
+    "42817906": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:18:42.351Z",
+      "title": "Timing of Deep Brain Stimulation and Cognitive Trajectories in GBA1-Associated Parkinson's Disease.",
+      "authors": "Asimakidou E, Avenali M, Aasly JO et al.",
+      "journal": "Movement disorders : official journal of the Movement Disorder Society",
+      "year": "2026",
+      "doi": "10.1002/mds.70520",
+      "score": 5
+    },
     "42823526": {
       "tags": [],
       "priority": "normal",
