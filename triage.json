@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-31T20:17:48.997Z",
+  "syncedAt": "2026-10-31T20:17:50.686Z",
   "committed": {
     "42834674": {
       "tags": [],
@@ -27,6 +27,20 @@
       "journal": "Movement disorders clinical practice",
       "year": "2026",
       "doi": "10.1002/mdc3.70831",
+      "score": 5
+    },
+    "42846914": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:50.686Z",
+      "title": "Hyperdirect projections from the supplementary motor area mediate subthalamic stimulation effects on movement initiation and inhibition in Parkinson's disease.",
+      "authors": "Meyer GM, Albares M, Lio G et al.",
+      "journal": "Brain communications",
+      "year": "2026",
+      "doi": "10.1093/braincomms/fcag325",
       "score": 5
     },
     "42860886": {
