@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-10-31T20:17:18.962Z",
+  "syncedAt": "2026-10-31T20:17:21.149Z",
   "committed": {
+    "42834674": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:21.149Z",
+      "title": "Directional Adaptive Deep Brain Stimulation: An Initial Report of Safety, Tolerability, and Effectiveness.",
+      "authors": "Beudel M, Herrington TM, Little S et al.",
+      "journal": "Movement disorders : official journal of the Movement Disorder Society",
+      "year": "2026",
+      "doi": "10.1002/mds.70556",
+      "score": 5
+    },
     "42845107": {
       "tags": [],
       "priority": "normal",
