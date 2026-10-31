@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-31T20:17:31.359Z",
+  "syncedAt": "2026-10-31T20:17:38.707Z",
   "committed": {
     "42834674": {
       "tags": [],
@@ -84,6 +84,20 @@
       "year": "2026",
       "doi": "10.1159/sfn/aeuag013",
       "score": 20
+    },
+    "42897155": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:38.706Z",
+      "title": "Dopamine amplifies subthalamic long-latency responses to cortical stimulation in patients with Parkinson's disease.",
+      "authors": "Beyer JC, Cavallo A, Vanhoecke J et al.",
+      "journal": "NPJ Parkinson's disease",
+      "year": "2026",
+      "doi": "10.1038/s41531-026-01567-6",
+      "score": 5
     },
     "42900661": {
       "tags": [],
