@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-31T20:17:21.149Z",
+  "syncedAt": "2026-10-31T20:17:25.624Z",
   "committed": {
     "42834674": {
       "tags": [],
@@ -27,6 +27,20 @@
       "journal": "Movement disorders clinical practice",
       "year": "2026",
       "doi": "10.1002/mdc3.70831",
+      "score": 5
+    },
+    "42860886": {
+      "tags": [],
+      "priority": "normal",
+      "exclude": false,
+      "notes": "",
+      "options": {},
+      "committedAt": "2026-10-31T20:17:25.624Z",
+      "title": "Disease Duration Differentiates Freezing of Gait Response to Subthalamic and Nigral Stimulation for Parkinson's Disease in an Exploratory Multicenter Controlled Trial.",
+      "authors": "Weiss D, Cebi I, Schütt M et al.",
+      "journal": "Movement disorders clinical practice",
+      "year": "2026",
+      "doi": "10.1002/mdc3.70813",
       "score": 5
     },
     "42860906": {
